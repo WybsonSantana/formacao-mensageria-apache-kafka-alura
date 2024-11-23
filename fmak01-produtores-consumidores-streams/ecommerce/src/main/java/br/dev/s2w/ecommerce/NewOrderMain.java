@@ -10,26 +10,29 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Properties;
+import java.util.UUID;
 
 public class NewOrderMain {
     public static void main(String[] args) {
         try (var producer = new KafkaProducer<String, String>(properties())) {
-            var orderTopic = "ECOMMERCE_NEW_ORDER";
-            var emailTopic = "ECOMMERCE_SEND_EMAIL";
+            for (var i = 0; i < 100; i++) {
+                var orderTopic = "ECOMMERCE_NEW_ORDER";
+                var emailTopic = "ECOMMERCE_SEND_EMAIL";
 
-            var orderKey = "132123,67523,7894589745";
-            var orderValue = "New order received successfully!";
+                var orderKey = UUID.randomUUID().toString();
+                var orderValue = "New order received successfully!";
 
-            var emailKey = "22134,78412,8903490562";
-            var emailValue = "Thank you for your order! We are processing your request.";
+                var emailKey = UUID.randomUUID().toString();
+                var emailValue = "Thank you for your order! We are processing your request.";
 
-            var orderRecord = new ProducerRecord<>(orderTopic, orderKey, orderValue);
-            var emailRecord = new ProducerRecord<>(emailTopic, emailKey, emailValue);
+                var orderRecord = new ProducerRecord<>(orderTopic, orderKey, orderValue);
+                var emailRecord = new ProducerRecord<>(emailTopic, emailKey, emailValue);
 
-            Callback callback = createCallback();
+                Callback callback = createCallback();
 
-            producer.send(orderRecord, callback);
-            producer.send(emailRecord, callback);
+                producer.send(orderRecord, callback);
+                producer.send(emailRecord, callback);
+            }
         } catch (Exception e) {
             System.err.printf("Execution exception: %s%n", e.getMessage());
         }

@@ -10,7 +10,7 @@ kafka-topics --create --topic LOJA_NOVO_PEDIDO \
 
 kafka-topics --create --topic ECOMMERCE_NEW_ORDER \
   --replication-factor 1 \
-  --partitions 1 \
+  --partitions 3 \
   --bootstrap-server kafka-broker:9093
 
 kafka-topics --create --topic ECOMMERCE_SEND_EMAIL \
