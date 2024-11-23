@@ -9,13 +9,13 @@ import java.time.Duration;
 import java.util.Collections;
 import java.util.Properties;
 
-public class FraudDetectorService {
+public class EmailService {
     public static void main(String[] args) {
         try (var consumer = new KafkaConsumer<String, String>(properties())) {
-            var orderTopic = "ECOMMERCE_NEW_ORDER";
+            var emailTopic = "ECOMMERCE_SEND_EMAIL";
             boolean listening = true;
 
-            consumer.subscribe(Collections.singletonList(orderTopic));
+            consumer.subscribe(Collections.singletonList(emailTopic));
 
             while (listening) {
                 var records = consumer.poll(Duration.ofMillis(100));
@@ -37,14 +37,14 @@ public class FraudDetectorService {
         properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
         properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, FraudDetectorService.class.getSimpleName());
+        properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, EmailService.class.getSimpleName());
 
         return properties;
     }
 
     private static boolean processRecord(ConsumerRecord<String, String> record, boolean listening) {
         System.out.println("---------------------");
-        System.out.println("Processing new order, checking for fraud...");
+        System.out.println("Sending e-mail...");
         System.out.printf("Key: %s%n", record.key());
         System.out.printf("Value: %s%n", record.value());
         System.out.printf("Partition: %d%n", record.partition());
@@ -58,7 +58,7 @@ public class FraudDetectorService {
             listening = false;
         }
 
-        System.out.println("Order processed successfully!\n");
+        System.out.println("E-mail sent successfully!\n");
         return listening;
     }
 }

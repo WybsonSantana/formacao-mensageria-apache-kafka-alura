@@ -12,4 +12,9 @@ kafka-topics --create --topic ECOMMERCE_NEW_ORDER \
   --replication-factor 1 \
   --partitions 1 \
   --bootstrap-server kafka-broker:9093
+
+kafka-topics --create --topic ECOMMERCE_SEND_EMAIL \
+  --replication-factor 1 \
+  --partitions 1 \
+  --bootstrap-server kafka-broker:9093
 echo "[$timestamp] INFO - kafka topics created!"
